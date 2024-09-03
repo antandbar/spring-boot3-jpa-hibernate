@@ -26,7 +26,42 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		delete2();
+		personalizedQueries();
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueries() {
+
+		Scanner scanner = new Scanner(System.in);
+
+		System.out.println("============== consulta solo el nombre por el id ==============");
+		System.out.println("Ingrese el id:");
+		Long id = scanner.nextLong();
+		scanner.close();
+
+		System.out.println("============== consulta el nombre ==============");
+		String name = repository.getNameById(id);
+		System.out.println(name);
+
+		System.out.println("============== consulta el id ==============");
+		Long idDb = repository.getIdById(id);
+		System.out.println(idDb);
+
+		System.out.println("============== consulta el nombre completo con concat ==============");
+		String fullName = repository.getFullNameById(id);
+		System.out.println(fullName);
+
+		System.out.println("============== Consulta por campos personalizados por el id ==============");
+		Optional<Object> optionalReg = repository.obtenerPersonDataById(id);
+		if (optionalReg.isPresent()) {
+			Object[] personReg = (Object[]) optionalReg.orElseThrow();
+			System.out.println("id=" + personReg[0] + ", nombre=" + personReg[1] + ", apellido" + personReg[2]
+					+ ", lenguaje=" + personReg[3]);
+		}
+		System.out.println("============== Consulta por campos personalizados lista ==============");
+		List<Object[]> regs = repository.obtenerPersonDataList();
+		regs.forEach(reg -> System.out
+				.println("id=" + reg[0] + ", nombre=" + reg[1] + ", apellido" + reg[2] + ", lenguaje=" + reg[3]));
 	}
 
 	@Transactional
