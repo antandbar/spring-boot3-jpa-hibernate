@@ -27,7 +27,61 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		personalizedQueries2();
+		personalizedQueriesBetween();
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueriesBetween() {
+
+		System.out.println("============== consultas por rangos id  ==============");
+		List<Person> persons = repository.findByIdBetween(2L,5L);
+		persons.forEach(System.out::println);
+
+		System.out.println("============== consultas por rangos letras nombre  ==============");
+		persons = repository.findByNameBetween("J", "Q");
+		persons.forEach(System.out::println);
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueriesConcatUpperAndLowerCase() {
+
+		System.out.println("============== consulta nombres y apellidos de personas ==============");
+		List<String> names = repository.findAllFullNameConcat();
+		names.forEach(System.out::println);
+
+		System.out.println("============== consulta nombres y apellidos mayuscula ==============");
+		names = repository.findAllFullNameConcatUpper();
+		names.forEach(System.out::println);
+
+		System.out.println("============== consulta nombres y apellidos minuscula ==============");
+		names = repository.findAllFullNameConcatLower();
+		names.forEach(System.out::println);
+
+		System.out.println("============== consulta personalizada persona uper y lower case ==============");
+		List<Object[]> regs = repository.findAllPersonDataListCase();
+		regs.forEach(reg -> System.out
+				.println("id=" + reg[0] + ", nombre=" + reg[1] + ", apellido" + reg[2] + ", lenguaje=" + reg[3]));
+
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueriesDistinct() {
+
+		System.out.println("============== consultas con nombres de personas ==============");
+		List<String> names = repository.findAllNames();
+		names.forEach(System.out::println);
+
+		System.out.println("============== consultas con nombres unicos de personas ==============");
+		names = repository.findAllNamesDistinct();
+		names.forEach(System.out::println);
+
+		System.out.println("============== consultas con lenguaje de prgramacion unicas ==============");
+		List<String> languages = repository.findAllProgrammingLanguageDistinct();
+		languages.forEach(System.out::println);
+
+		System.out.println("============== consultas con total de lenguajes de prgramacion unicas ==============");
+		Long totalLanguages = repository.findAllProgrammingLanguageDistinctCount();
+		System.out.println("total de lenguajes de programacion: " + totalLanguages);
 	}
 
 	@Transactional(readOnly = true)

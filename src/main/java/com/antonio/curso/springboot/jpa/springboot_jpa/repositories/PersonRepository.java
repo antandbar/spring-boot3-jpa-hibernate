@@ -11,6 +11,42 @@ import com.antonio.curso.springboot.jpa.springboot_jpa.entities.Person;
 
 public interface PersonRepository extends CrudRepository<Person, Long>{
 
+    List<Person> findByIdBetween(Long id1, Long id2);
+
+    List<Person> findByNameBetween(String name1, String name2);
+
+    @Query("select p from Person p where p.name between ?1 and ?2")
+    List<Person> findAllBetweenName(String c1, String c2);
+
+    @Query("select p from Person p where p.id between ?1 and ?2")
+    List<Person> findAllBetweenId(Integer id1, Integer id2);
+
+    @Query("select p.id, upper(p.name), lower(p.lastname), upper(p.programmingLanguage) from Person p")
+    List<Object[]> findAllPersonDataListCase();
+
+
+    @Query("select upper(p.name || ' ' || p.lastname) from Person p")
+    List<String> findAllFullNameConcatUpper();
+
+    @Query("select lower(concat(p.name,' ', p.lastname)) from Person p")
+    List<String> findAllFullNameConcatLower();
+
+    //@Query("select CONCAT(p.name,' ', p.lastname) from Person p")
+    @Query("select p.name || ' ' || p.lastname from Person p")
+    List<String> findAllFullNameConcat();
+
+    @Query("select count(distinct(p.programmingLanguage)) from Person p")
+    Long findAllProgrammingLanguageDistinctCount();
+
+    @Query("select distinct(p.programmingLanguage) from Person p")
+    List<String> findAllProgrammingLanguageDistinct();
+
+    @Query("select p.name from Person p")
+    List<String> findAllNames();
+
+    @Query("select distinct(p.name) from Person p")
+    List<String> findAllNamesDistinct();
+
     @Query("select new com.antonio.curso.springboot.jpa.springboot_jpa.dto.PersonDto(p.name, p.lastname) from Person p")
     List<PersonDto> findAllPersonDto();
 
