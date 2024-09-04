@@ -10,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.antonio.curso.springboot.jpa.springboot_jpa.dto.PersonDto;
 import com.antonio.curso.springboot.jpa.springboot_jpa.entities.Person;
 import com.antonio.curso.springboot.jpa.springboot_jpa.repositories.PersonRepository;
 
@@ -26,7 +27,26 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		personalizedQueries();
+		personalizedQueries2();
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueries2() {
+
+		System.out.println("============== consulta por objeto persona y leguaje de programacion ==============");
+		List<Object[]> personsReg = repository.findAllMixPerson();
+		
+		personsReg.forEach(reg -> {
+			System.out.println("programmingLanguage=" + reg[1] + ", person=" + reg[0]);
+		});
+
+		System.out.println("============== consulta que puebla y devuelve objeto entity de una instacia personalizada ==============");
+		List<Person> persons = repository.findAllObjectPersonPersonalized();
+		persons.forEach(System.out::println);
+
+		System.out.println("============== consulta que puebla y devuelve objeto dto de una clase personalizada ==============");
+		List<PersonDto> personsDto = repository.findAllPersonDto();
+		personsDto.forEach(System.out::println);
 	}
 
 	@Transactional(readOnly = true)
